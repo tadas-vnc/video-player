@@ -27,7 +27,26 @@ const VideoPlayer = () => {
   const handleVideoChange = (event) => {
     setVideoFile(event.target.files[0]);
   };
+  useEffect(()=>{
+    if(videoFile && window.videojs) {
+      window.videojs(document.getElementById('mainplayer'));
+      }
+  },[videoFile])
 
+  useEffect(() => {
+    const script = document.createElement('script');
+  
+    script.src = "https://vjs.zencdn.net/8.16.1/video.min.js";
+    script.async = true;
+    script.onload = (e)=>{
+        
+    }
+    document.body.appendChild(script);
+  
+    return () => {
+      document.body.removeChild(script);
+    }
+  }, []);
   const downloadCurrentFrame = () => {
     if (videoRef.current && canvasRef.current) {
       const canvas = canvasRef.current;
@@ -120,7 +139,7 @@ const VideoPlayer = () => {
                 </Form.Group>
                 {videoFile && (
                   <div className="mb-3">
-                    <video className='video-js' data-setup="{}" preload="auto" ref={videoRef} controls width="100%">
+                    <video id="mainplayer" className='video-js' data-setup="{}" preload="auto" ref={videoRef} controls style={{width:"100%",minHeight:"20rem",maxHeight:"100dvh"}} width="100%">
                       <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
                       Your browser does not support the video tag.
                     </video>
